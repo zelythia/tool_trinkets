@@ -1,0 +1,43 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+issueTrackerURL = "https://github.com/zelythia/tool_trinkets/issues"
+license = "MIT"
+
+[[mods]]
+modId = "tool_trinkets"
+version = "${version}"
+displayName = "Tool Trinkets"
+displayURL = "https://modrinth.com/mod/tool_trinkets"
+authors = "lukas/zelythia"
+description = '''
+This mod adds trinket slots for minecraft tools that also work with AutoTools!
+'''
+logoFile = "assets/tool_trinkets/icon.png"
+
+[[dependencies.tool_trinkets]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tool_trinkets]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tool_trinkets]]
+modId = "curios"
+mandatory = true
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tool_trinkets]]
+modId = "autotools"
+mandatory = true
+versionRange = "[3.0.0,)"
+ordering = "NONE"
+side = "CLIENT"

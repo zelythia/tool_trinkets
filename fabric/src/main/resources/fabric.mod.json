@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "tool_trinkets",
+  "version": "${version}",
+  "name": "Tool Trinkets",
+  "description": "This mod adds trinket slots for minecraft tools that also work with AutoTools!",
+  "authors": [
+    "lukas/zelythia"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/tool_trinkets",
+    "issues": "https://github.com/zelythia/tool_trinkets/issues",
+    "sources": "https://github.com/zelythia/tool_trinkets"
+  },
+  "license": "MIT",
+  "icon": "assets/tool_trinkets/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.zelythia.tool_trinkets.fabric.ToolTrinketsFabric"
+    ],
+    "client": [
+      "net.zelythia.tool_trinkets.fabric.client.ToolTrinketsFabricClient"
+    ]
+  },
+  "mixins": [
+    "tool_trinkets.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.2",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*",
+    "trinkets": "*",
+    "autotools": ">=3.0.0"
+  }
+}
