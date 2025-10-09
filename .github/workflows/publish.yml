@@ -1,0 +1,117 @@
+name: Publish on GitHub, CurseForge & Modrinth
+
+on: [ workflow_dispatch ]
+
+env:
+  MINECRAFT_VERSION: 1.20.1
+  VERSION: 3.3.1
+  SUPPORTED_VERSIONS: |
+    1.20
+    1.20.1
+  FORGE: false
+  FABRIC: false
+  GITHUB: true
+  MAVEN: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check Environment Variables
+        run: env
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: 21
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Build
+        run: ./gradlew clean build
+
+      - name: Publish Forge-Mod on (Curseforge/Modrinth)
+        if: env.FORGE == 'true'
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: IKBcZJza
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          curseforge-id: 1361831
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          files: |
+            forge/build/libs/!(*-@(dev|shadow|sources|javadoc)).jar
+
+          name: ToolTrinkets Forge ${{env.MINECRAFT_VERSION}} v${{env.VERSION}}
+          version: "${{env.VERSION}}"
+          version-type: release
+          changelog-file: CHANGELOG.md
+          loaders: |
+            forge
+
+          dependencies: |
+            curios(required){modrinth:vvuO3ImH}{curseforge:309927}#(ignore:github)
+            autotools(optional){modrinth:zgVJyCgK}{curseforge:522205}#(ignore:github)
+
+      - name: Publish Fabric-Mod on (Curseforge/Modrinth)
+        if: env.FABRIC == 'true'
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: IKBcZJza
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          curseforge-id: 1361831
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          files: |
+            fabric/build/libs/!(*-@(dev|shadow|sources|javadoc)).jar
+
+          name: ToolTrinkets Fabric ${{env.MINECRAFT_VERSION}} v${{env.VERSION}}
+          version: "${{env.VERSION}}"
+          version-type: release
+          changelog-file: CHANGELOG.md
+          loaders: |
+            fabric
+            quilt
+
+          dependencies: |
+            trinkets(required){modrinth:5aaWibi9}{curseforge:341284}#(ignore:github)
+            autotools(optional){modrinth:zgVJyCgK}{curseforge:522205}#(ignore:github)
+
+      - name: Publish Mod on Github
+        if: env.GITHUB == 'true'
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          github-token: ${{ secrets.GITH_TOKEN }}
+
+          files: |
+            fabric/build/libs/!(*-@(dev|shadow|sources|javadoc)).jar
+            fabric/build/libs/*-@(dev|shadow|sources|javadoc).jar
+            
+            forge/build/libs/!(*-@(dev|shadow|sources|javadoc)).jar
+            forge/build/libs/*-@(dev|shadow|sources|javadoc).jar
+
+          name: ToolTrinkets Fabric ${{env.MINECRAFT_VERSION}} v${{env.VERSION}}
+          version: "${{env.VERSION}}"
+          changelog-file: CHANGELOG.md
+
+          github-tag: ${{env.MINECRAFT_VERSION}}-${{env.VERSION}}
+      - name: Publish Maven
+        if: env.MAVEN == 'true'
+        run: ./gradlew publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_USERNAME: ${{secrets.MAVEN_USERNAME}}
+          MAVEN_PASSWORD: ${{secrets.MAVEN_PASSWORD}}
