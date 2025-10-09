@@ -28,10 +28,12 @@
   ],
   "depends": {
     "fabricloader": ">=0.17.2",
-    "minecraft": "~1.20.1",
+    "minecraft": ">=1.20 <=1.20.1",
     "java": ">=17",
     "fabric-api": "*",
-    "trinkets": "*",
+    "trinkets": "*"
+  },
+  "recommends": {
     "autotools": ">=3.0.0"
   }
 }

@@ -37,7 +37,7 @@ side = "BOTH"
 
 [[dependencies.tool_trinkets]]
 modId = "autotools"
-mandatory = true
+mandatory = false
 versionRange = "[3.0.0,)"
 ordering = "NONE"
 side = "CLIENT"
