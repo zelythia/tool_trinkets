@@ -52,53 +52,49 @@ public final class ToolTrinketsForge {
     @SubscribeEvent
     public void attachCapabilities(AttachCapabilitiesEvent<ItemStack> evt) {
         ItemStack stack = evt.getObject();
-        Item item = stack.getItem();
-        if (stack.is(TOOLS)) {
-            evt.addCapability(CuriosCapability.ID_ITEM, CuriosApi.createCurioProvider(new ICurio() {
+        evt.addCapability(CuriosCapability.ID_ITEM, CuriosApi.createCurioProvider(new ICurio() {
+            @Override
+            public ItemStack getStack() {
+                return stack;
+            }
 
-                @Override
-                public ItemStack getStack() {
-                    return stack;
-                }
+            @Override
+            public void onEquip(SlotContext slotContext, ItemStack prevStack) {
+                ICurio.super.onEquip(slotContext, prevStack);
 
-                @Override
-                public void onEquip(SlotContext slotContext, ItemStack prevStack) {
-                    ICurio.super.onEquip(slotContext, prevStack);
+                LazyOptional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(slotContext.entity());
+                curiosInventory.ifPresent(inv -> {
+                    int slots = inv.getStacksHandler("tools").get().getSlots();
 
-                    LazyOptional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(slotContext.entity());
-                    curiosInventory.ifPresent(inv -> {
-                        int slots = inv.getStacksHandler("tools").get().getSlots();
+                    IDynamicStackHandler tools = inv.getStacksHandler("tools").get().getStacks();
 
-                        IDynamicStackHandler tools = inv.getStacksHandler("tools").get().getStacks();
-
-                        int count = 0;
-                        for (int i = 0; i < slots; i++) {
-                            if (tools.getStackInSlot(i) != ItemStack.EMPTY) {
-                                count++;
-                            }
+                    int count = 0;
+                    for (int i = 0; i < slots; i++) {
+                        if (tools.getStackInSlot(i) != ItemStack.EMPTY) {
+                            count++;
                         }
+                    }
 
-                        if (count == slots) {
-                            UUID uuid = UUID.randomUUID();
-                            inv.addPermanentSlotModifier("tools", uuid, ATTRIBUTE_NAME, 1, AttributeModifier.Operation.ADDITION);
-                        }
+                    if (count == slots) {
+                        UUID uuid = UUID.randomUUID();
+                        inv.addPermanentSlotModifier("tools", uuid, ATTRIBUTE_NAME, 1, AttributeModifier.Operation.ADDITION);
+                    }
+                });
+            }
+
+
+            @Override
+            public void onUnequip(SlotContext slotContext, ItemStack newStack) {
+                ICurio.super.onUnequip(slotContext, newStack);
+
+                LazyOptional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(slotContext.entity());
+                curiosInventory.ifPresent(inv -> {
+                    inv.getModifiers().get("tools").stream().filter(attributeModifier -> attributeModifier.getName().equals(ATTRIBUTE_NAME)).findFirst().ifPresent(attributeModifier -> {
+                        inv.removeSlotModifier("tools", attributeModifier.getId());
                     });
-                }
-
-
-                @Override
-                public void onUnequip(SlotContext slotContext, ItemStack newStack) {
-                    ICurio.super.onUnequip(slotContext, newStack);
-
-                    LazyOptional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(slotContext.entity());
-                    curiosInventory.ifPresent(inv -> {
-                        inv.getModifiers().get("tools").stream().filter(attributeModifier -> attributeModifier.getName().equals(ATTRIBUTE_NAME)).findFirst().ifPresent(attributeModifier -> {
-                            inv.removeSlotModifier("tools", attributeModifier.getId());
-                        });
-                    });
-                }
-            }));
-        }
+                });
+            }
+        }));
 
     }
 

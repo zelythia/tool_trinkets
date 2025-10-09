@@ -45,14 +45,18 @@ public class CMoveCurioPacket {
             if (pkt.invSlot >= player.containerMenu.slots.size()) return;
 
             CuriosApi.getCuriosInventory(player).ifPresent(curiosItemHandler -> {
-                ICurioStacksHandler stacksHandler = curiosItemHandler.getStacksHandler("tools").orElseGet(null);
-                if(stacksHandler == null || pkt.curioSlot >= stacksHandler.getSlots()) return;
+                int curioSlot = pkt.curioSlot;
 
-                ItemStack fromStack = stacksHandler.getStacks().getStackInSlot(pkt.curioSlot).copy();
+                ICurioStacksHandler stacksHandler = curiosItemHandler.getStacksHandler("tools").orElseGet(null);
+                if(stacksHandler == null || curioSlot >= stacksHandler.getSlots()){
+                    curioSlot = stacksHandler.getSlots() - 1;
+                }
+
+                ItemStack fromStack = stacksHandler.getStacks().getStackInSlot(curioSlot).copy();
                 ItemStack toStack = player.getInventory().getItem(pkt.invSlot).copy();
 
                 player.getInventory().setItem(pkt.invSlot, fromStack);
-                stacksHandler.getStacks().setStackInSlot(pkt.curioSlot, toStack);
+                stacksHandler.getStacks().setStackInSlot(curioSlot, toStack);
 
                 // mark changed so server sends updates
                 player.containerMenu.broadcastChanges();

@@ -42,13 +42,13 @@ public class AutoToolsMixin {
                 int size = inventory.getContainerSize();
                 return trinketComponent.get().getInventory().get("hand").get("tool").getItem(slot - size);
             }
+            return ItemStack.EMPTY;
         }
-
-        return inventory.getItem(slot);
+        else return inventory.getItem(slot);
     }
 
 
-    @Redirect(method = "selectItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V"), remap = false)
+    @Redirect(method = "selectItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V"))
     private static void onSelectItem(MultiPlayerGameMode instance, int id, int sourceSlot, int destSlot, ClickType clickType, Player player){
         if(sourceSlot >= player.getInventory().getContainerSize()) {
             FriendlyByteBuf buf = PacketByteBufs.create();
@@ -56,17 +56,18 @@ public class AutoToolsMixin {
             buf.writeInt(destSlot);
             ClientPlayNetworking.send(ToolTrinketsFabric.MOVE_TRINKET_PACKET, buf);
         }
+        else instance.handleInventoryMouseClick(id, sourceSlot, destSlot, ClickType.SWAP, player);
     }
 
-    @Redirect(method = "switchBack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V", ordinal = 1), remap = false)
+    @Redirect(method = "switchBack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V", ordinal = 1))
     private static void onSwitchBack(MultiPlayerGameMode instance, int id, int sourceSlot, int destSlot, ClickType clickType, Player player){
-
         if(sourceSlot >= player.getInventory().getContainerSize()) {
             FriendlyByteBuf buf = PacketByteBufs.create();
             buf.writeInt(sourceSlot - player.getInventory().getContainerSize());
             buf.writeInt(destSlot);
             ClientPlayNetworking.send(ToolTrinketsFabric.MOVE_TRINKET_PACKET, buf);
         }
+        else instance.handleInventoryMouseClick(id, sourceSlot, destSlot, ClickType.SWAP, player);
     }
 }
 
