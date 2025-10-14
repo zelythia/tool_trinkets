@@ -61,12 +61,15 @@ dependencies {
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 
     // Compile against only the API artifact
-//    modCompileOnly "top.theillusivec4.curios:curios-forge:${rootProject.curios_version}:api"
     modCompileOnly "top.theillusivec4.curios:curios-forge:${rootProject.curios_version}"
     // Use the full Curios API jar at runtime
     modRuntimeOnly "top.theillusivec4.curios:curios-forge:${rootProject.curios_version}"
 
-    modImplementation("net.zelythia:autotools-forge:3.3.4-SNAPSHOT+1.20.1")
+    modImplementation("net.zelythia:autotools-forge:${rootProject.autotools_version}")
+}
+
+configurations.configureEach {
+    resolutionStrategy.force("net.sf.jopt-simple:jopt-simple:5.0.4")
 }
 
 processResources {

@@ -58,7 +58,7 @@ dependencies {
     modImplementation("net.zelythia:autotools-fabric:${rootProject.autotools_version}")
 
     modImplementation "dev.emi:trinkets:${rootProject.trinkets_version}"
-    modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.0"
+//    modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.0"
 }
 
 processResources {
