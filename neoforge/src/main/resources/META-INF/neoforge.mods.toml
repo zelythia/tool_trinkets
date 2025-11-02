@@ -1,39 +1,46 @@
 modLoader = "javafml"
 loaderVersion = "[2,)"
-issueTrackerURL = "https://github.com/zelythia/AutoTools/issues"
+issueTrackerURL = "https://github.com/zelythia/tool_trinkets/issues"
 license = "MIT"
 
 [[mods]]
-modId="autotools"
-version="${version}"
-displayName="AutoTools"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/autotools"
-logoFile="icon.png"
-authors="zelythia"
-description='''
-Automatically switch to the correct tool to use on a block/mob.
+modId = "tool_trinkets"
+version = "${version}"
+displayName = "Tool Trinkets"
+displayURL = "https://modrinth.com/mod/tool_trinkets"
+authors = "lukas/zelythia"
+description = '''
+This mod adds trinket slots for minecraft tools that also work with AutoTools!
 '''
+logoFile = "assets/tool_trinkets/icon.png"
 
-[[dependencies.autotools]]
+[[dependencies.tool_trinkets]]
 modId = "neoforge"
 type="required"
 versionRange = "[20.6,)"
 ordering = "NONE"
 side = "CLIENT"
 
-[[dependencies.autotools]]
+[[dependencies.tool_trinkets]]
 modId = "minecraft"
-type="required"
+mandatory = true
 versionRange = "[1.20.5,1.21)"
 ordering = "NONE"
-side = "CLIENT"
+side = "BOTH"
 
-[[dependencies.autotools]]
-modId = "cloth_config"
+[[dependencies.tool_trinkets]]
+modId = "curios"
 mandatory = true
-versionRange = "[4.9,)"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tool_trinkets]]
+modId = "autotools"
+mandatory = false
+versionRange = "[3.3.2,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[mixins]]
-config = "autotools-common.mixins.json"
+config = "tool_trinkets.mixins.json"

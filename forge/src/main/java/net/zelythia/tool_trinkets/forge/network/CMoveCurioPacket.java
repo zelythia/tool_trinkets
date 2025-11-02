@@ -3,14 +3,12 @@ package net.zelythia.tool_trinkets.forge.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.PacketDistributor;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.common.network.NetworkHandler;
 import top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios;
-
-import java.util.function.Supplier;
 
 public class CMoveCurioPacket {
 
@@ -33,9 +31,7 @@ public class CMoveCurioPacket {
         return new CMoveCurioPacket(from, to);
     }
 
-    public static void handle(CMoveCurioPacket pkt, Supplier<NetworkEvent.Context> ctxSupplier) {
-        NetworkEvent.Context ctx = ctxSupplier.get();
-
+    public static void handle(CMoveCurioPacket pkt, CustomPayloadEvent.Context ctx) {
         ctx.enqueueWork(() -> {
             if (ctx.getSender() == null) return;
             ServerPlayer player = ctx.getSender();
@@ -60,7 +56,7 @@ public class CMoveCurioPacket {
 
                 // mark changed so server sends updates
                 player.containerMenu.broadcastChanges();
-                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new SPacketSyncCurios(player.getId(), curiosItemHandler.getCurios()));
+                NetworkHandler.INSTANCE.send(new SPacketSyncCurios(player.getId(), curiosItemHandler.getCurios()), PacketDistributor.PLAYER.with(player));
             });
 
         });
