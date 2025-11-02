@@ -8,10 +8,10 @@ env:
   SUPPORTED_VERSIONS: |
     1.20
     1.20.1
-  FORGE: false
+  FORGE: true
   FABRIC: false
-  GITHUB: true
-  MAVEN: true
+  GITHUB: false
+  MAVEN: false
 
 jobs:
   publish:

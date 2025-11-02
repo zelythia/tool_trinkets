@@ -34,6 +34,6 @@
     "trinkets": "*"
   },
   "recommends": {
-    "autotools": ">=3.0.0"
+    "autotools": ">=3.3.0"
   }
 }

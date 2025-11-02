@@ -1,0 +1,1 @@
+ - Fix a bug where the game would crash in certain scenarios
