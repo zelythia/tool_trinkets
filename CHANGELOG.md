@@ -1,1 +1,1 @@
- - Fix a bug where the game would crash in certain scenarios
+ - Fix a bug where a tool would remain in the inventory with switchBack

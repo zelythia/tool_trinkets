@@ -18,6 +18,7 @@ public class CMoveCurioPacket {
     private final int invSlot;
 
     public CMoveCurioPacket(int curioSlot, int invSlot) {
+//        System.out.println("New Packet: Curio: " + curioSlot + ", InvSlot: " + invSlot);
         this.curioSlot = curioSlot;
         this.invSlot = invSlot;
     }
@@ -58,9 +59,9 @@ public class CMoveCurioPacket {
                 player.getInventory().setItem(pkt.invSlot, fromStack);
                 stacksHandler.getStacks().setStackInSlot(curioSlot, toStack);
 
-                // mark changed so server sends updates
-                player.containerMenu.broadcastChanges();
+                // mark changes so server sends updates
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new SPacketSyncCurios(player.getId(), curiosItemHandler.getCurios()));
+                player.containerMenu.broadcastChanges();
             });
 
         });
