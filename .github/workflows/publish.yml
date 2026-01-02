@@ -5,8 +5,9 @@ on: [ workflow_dispatch ]
 env:
   MINECRAFT_VERSION: 1.20.6
   VERSION: 1.0.0
-  FORGE: true
-  FABRIC: true
+  FORGE: false
+  FABRIC: false
+  NEOFORGE: true
   GITHUB: true
   MAVEN: true
 
@@ -87,6 +88,32 @@ jobs:
             trinkets(required){modrinth:5aaWibi9}{curseforge:341284}#(ignore:github)
             autotools(optional){modrinth:zgVJyCgK}{curseforge:522205}#(ignore:github)
 
+      - name: Publish Neoforge-Mod on (Curseforge/Modrinth)
+        if: env.NEOFORGE == 'true'
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: IKBcZJza
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          curseforge-id: 1361831
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          files: |
+            neoforge/build/libs/!(*-@(dev|shadow|sources|javadoc)).jar
+
+          name: ToolTrinkets Neoforge ${{env.MINECRAFT_VERSION}} v${{env.VERSION}}
+          version: "${{env.VERSION}}"
+          version-type: release
+          changelog-file: CHANGELOG.md
+          loaders: |
+            neoforge
+            quilt
+
+          dependencies: |
+            curios(required){modrinth:vvuO3ImH}{curseforge:309927}#(ignore:github)
+            autotools(optional){modrinth:zgVJyCgK}{curseforge:522205}#(ignore:github)
+      
+
       - name: Publish Mod on Github
         if: env.GITHUB == 'true'
         uses: Kir-Antipov/mc-publish@v3.3
@@ -99,6 +126,9 @@ jobs:
             
             forge/build/libs/!(*-@(dev|shadow|sources|javadoc)).jar
             forge/build/libs/*-@(dev|shadow|sources|javadoc).jar
+            
+            neoforge/build/libs/!(*-@(dev|shadow|sources|javadoc)).jar
+            neoforge/build/libs/*-@(dev|shadow|sources|javadoc).jar
 
           name: ToolTrinkets Fabric ${{env.MINECRAFT_VERSION}} v${{env.VERSION}}
           version: "${{env.VERSION}}"
