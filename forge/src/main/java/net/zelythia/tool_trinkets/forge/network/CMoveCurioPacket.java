@@ -49,9 +49,8 @@ public class CMoveCurioPacket {
                 int curioSlot = pkt.curioSlot;
 
                 ICurioStacksHandler stacksHandler = curiosItemHandler.getStacksHandler("tools").orElseGet(null);
-                if(stacksHandler == null || curioSlot >= stacksHandler.getSlots()){
-                    curioSlot = stacksHandler.getSlots() - 1;
-                }
+                if(stacksHandler == null) return;
+
 
                 ItemStack fromStack = stacksHandler.getStacks().getStackInSlot(curioSlot).copy();
                 ItemStack toStack = player.getInventory().getItem(pkt.invSlot).copy();

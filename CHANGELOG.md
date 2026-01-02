@@ -1,1 +1,1 @@
- - Fix a bug where a tool would remain in the inventory with switchBack
+ - Remove dynamic slot size as it causes to many bugs and crashes
