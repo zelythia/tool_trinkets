@@ -107,7 +107,6 @@ jobs:
           changelog-file: CHANGELOG.md
           loaders: |
             neoforge
-            quilt
 
           dependencies: |
             curios(required){modrinth:vvuO3ImH}{curseforge:309927}#(ignore:github)
