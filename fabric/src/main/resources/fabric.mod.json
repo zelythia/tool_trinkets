@@ -27,13 +27,16 @@
     "tool_trinkets.mixins.json"
   ],
   "depends": {
+    "minecraft": [
+      "1.21",
+      "1.21.1"
+    ],
     "fabricloader": ">=0.17.2",
     "java": ">=17",
     "fabric-api": "*",
     "trinkets": "*"
   },
   "recommends": {
-    "autotools": ">=3.3.2",
-    "minecraft": "1.20.6"
+    "autotools": ">=3.3.2"
   }
 }
