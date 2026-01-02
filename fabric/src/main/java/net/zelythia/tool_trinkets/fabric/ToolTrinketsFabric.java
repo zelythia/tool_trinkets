@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public final class ToolTrinketsFabric implements ModInitializer {
-    public static final ResourceLocation MOVE_TRINKET_PACKET = new ResourceLocation(ToolTrinkets.MOD_ID, "move_trinket");
+    public static final ResourceLocation MOVE_TRINKET_PACKET = ResourceLocation.fromNamespaceAndPath(ToolTrinkets.MOD_ID, "move_trinket");
 
 
     public record MoveTrinketPayload(int sourceSlot, int destSlot) implements CustomPacketPayload{

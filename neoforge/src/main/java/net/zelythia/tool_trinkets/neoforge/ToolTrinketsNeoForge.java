@@ -26,8 +26,8 @@ import top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios;
 
 @Mod(ToolTrinkets.MOD_ID)
 public class ToolTrinketsNeoForge {
-    public static final ResourceLocation MOVE_TRINKET_PACKET = new ResourceLocation(ToolTrinkets.MOD_ID, "move_trinket");
-    public static final TagKey<Item> TOOLS = ItemTags.create(new ResourceLocation("curios", "tools"));
+    public static final ResourceLocation MOVE_TRINKET_PACKET = ResourceLocation.fromNamespaceAndPath(ToolTrinkets.MOD_ID, "move_trinket");
+    public static final TagKey<Item> TOOLS = ItemTags.create(ResourceLocation.fromNamespaceAndPath("curios", "tools"));
     private static final Logger LOGGER = LoggerFactory.getLogger(ToolTrinketsNeoForge.class);
 
 

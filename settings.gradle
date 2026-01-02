@@ -7,9 +7,9 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'tool_trinkets_1.20.6'
+rootProject.name = 'tool_trinkets_1.21.1'
 
 include 'common'
 include 'fabric'
-include 'forge'
+//include 'forge'
 include 'neoforge'
