@@ -3,13 +3,10 @@ name: Publish on GitHub, CurseForge & Modrinth
 on: [ workflow_dispatch ]
 
 env:
-  MINECRAFT_VERSION: 1.20.1
-  VERSION: 1.0.3
-  SUPPORTED_VERSIONS: |
-    1.20
-    1.20.1
+  MINECRAFT_VERSION: 1.16.5
+  VERSION: 1.0.0
   FORGE: true
-  FABRIC: false
+  FABRIC: true
   GITHUB: true
   MAVEN: true
 
@@ -87,7 +84,8 @@ jobs:
             quilt
 
           dependencies: |
-            trinkets(required){modrinth:5aaWibi9}{curseforge:341284}#(ignore:github)
+            curios(required){modrinth:vvuO3ImH}{curseforge:309927}#(ignore:github)
+            cardinal-components-api(required){curseforge:318449}#(ignore:modrinth)#(ignore:github)
             autotools(optional){modrinth:zgVJyCgK}{curseforge:522205}#(ignore:github)
 
       - name: Publish Mod on Github
@@ -108,6 +106,7 @@ jobs:
           changelog-file: CHANGELOG.md
 
           github-tag: ${{env.MINECRAFT_VERSION}}-${{env.VERSION}}
+
       - name: Publish Maven
         if: env.MAVEN == 'true'
         run: ./gradlew publish

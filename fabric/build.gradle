@@ -12,7 +12,10 @@ repositories {
         url = uri("https://maven.zelythia.net/snapshots")
     }
 
-
+    maven {
+        name = "Illusive Soulworks maven"
+        url = "https://maven.theillusivec4.top/"
+    }
     maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
@@ -57,8 +60,16 @@ dependencies {
 
     modImplementation("net.zelythia:autotools-fabric:${rootProject.autotools_version}")
 
-    modImplementation "dev.emi:trinkets:${rootProject.trinkets_version}"
-    modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.0"
+    // Compile against only the API artifact
+//    modCompileOnly "top.theillusivec4.curios:curios-forge:${rootProject.curios_version}:api"
+    modCompileOnly "top.theillusivec4.curios:curios-fabric:${rootProject.curios_version_fabric}"
+    // Use the full Curios API jar at runtime
+    modRuntimeOnly "top.theillusivec4.curios:curios-fabric:${rootProject.curios_version_fabric}"
+
+    // Required to run curios. Not properly included
+    modRuntimeOnly("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${cardinal_components_version}" ){
+        exclude group: "net.fabricmc", module: "fabric-loader"
+    }
 }
 
 processResources {

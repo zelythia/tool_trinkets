@@ -3,8 +3,8 @@ package net.zelythia.tool_trinkets.forge.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.common.network.NetworkHandler;
@@ -45,7 +45,7 @@ public class CMoveCurioPacket {
             if (pkt.curioSlot < 0 || pkt.invSlot < 0) return;
             if (pkt.invSlot >= player.containerMenu.slots.size()) return;
 
-            CuriosApi.getCuriosInventory(player).ifPresent(curiosItemHandler -> {
+            CuriosApi.getCuriosHelper().getCuriosHandler(player).resolve().ifPresent(curiosItemHandler -> {
                 int curioSlot = pkt.curioSlot;
 
                 ICurioStacksHandler stacksHandler = curiosItemHandler.getStacksHandler("tools").orElseGet(null);
@@ -53,9 +53,9 @@ public class CMoveCurioPacket {
 
 
                 ItemStack fromStack = stacksHandler.getStacks().getStackInSlot(curioSlot).copy();
-                ItemStack toStack = player.getInventory().getItem(pkt.invSlot).copy();
+                ItemStack toStack = player.inventory.getItem(pkt.invSlot).copy();
 
-                player.getInventory().setItem(pkt.invSlot, fromStack);
+                player.inventory.setItem(pkt.invSlot, fromStack);
                 stacksHandler.getStacks().setStackInSlot(curioSlot, toStack);
 
                 // mark changes so server sends updates

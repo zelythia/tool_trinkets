@@ -2,6 +2,7 @@ package net.zelythia.tool_trinkets.forge.mixins;
 
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +26,7 @@ public class AutoToolsMixin {
     private static int onGetContainerSize(Inventory inventory) {
         int i = 0;
 
-        Optional<ICuriosItemHandler> curiosItemHandler = CuriosApi.getCuriosInventory(Minecraft.getInstance().player).resolve();
+        Optional<ICuriosItemHandler> curiosItemHandler = CuriosApi.getCuriosHelper().getCuriosHandler(Minecraft.getInstance().player).resolve();
         if (curiosItemHandler.isPresent()) {
             i = curiosItemHandler.get().getStacksHandler("tools").get().getStacks().getSlots();
         }
@@ -36,7 +37,7 @@ public class AutoToolsMixin {
     @Redirect(method = "getCorrectTool", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;getItem(I)Lnet/minecraft/world/item/ItemStack;"))
     private static ItemStack onGetItem(Inventory inventory, int slot) {
         if (slot >= inventory.getContainerSize()) {
-            Optional<ICuriosItemHandler> curiosItemHandler = CuriosApi.getCuriosInventory(Minecraft.getInstance().player).resolve();
+            Optional<ICuriosItemHandler> curiosItemHandler = CuriosApi.getCuriosHelper().getCuriosHandler(Minecraft.getInstance().player).resolve();
             if (curiosItemHandler.isPresent()) {
                 int size = inventory.getContainerSize();
                 return curiosItemHandler.get().getStacksHandler("tools").get().getStacks().getStackInSlot(slot - size);
@@ -46,17 +47,33 @@ public class AutoToolsMixin {
     }
 
 
-    @Redirect(method = "selectItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V"))
-    private static void onSelectItem(MultiPlayerGameMode instance, int id, int sourceSlot, int destSlot, ClickType clickType, Player player) {
-        if (sourceSlot >= player.getInventory().getContainerSize()) {
-            Networking.CHANNEL.sendToServer(new CMoveCurioPacket(sourceSlot - player.getInventory().getContainerSize(), destSlot));
-        } else instance.handleInventoryMouseClick(id, sourceSlot, destSlot, ClickType.SWAP, player);
+    @Redirect(method = "selectItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;hasShiftDown()Z"))
+    private static boolean onHasShiftDown() {
+        return false;
     }
 
-    @Redirect(method = "switchBack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V", ordinal = 1))
-    private static void onSwitchBack(MultiPlayerGameMode instance, int id, int sourceSlot, int destSlot, ClickType clickType, Player player) {
-        if (sourceSlot >= player.getInventory().getContainerSize()) {
-                Networking.CHANNEL.sendToServer(new CMoveCurioPacket(sourceSlot - player.getInventory().getContainerSize(), destSlot));
-        } else instance.handleInventoryMouseClick(id, sourceSlot, destSlot, ClickType.SWAP, player);
+    @Redirect(method = "selectItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/item/ItemStack;"))
+    private static ItemStack onSelectItem(MultiPlayerGameMode instance, int id, int destSlot, int sourceSlot, ClickType clickType, Player player) {
+        if (sourceSlot >= player.inventory.getContainerSize()) {
+            Networking.CHANNEL.sendToServer(new CMoveCurioPacket(sourceSlot - player.inventory.getContainerSize(), destSlot - 36));
+        } else{
+            // Default behaviour
+            if (Screen.hasShiftDown()) {
+                instance.handleInventoryMouseClick(id, destSlot - 18, sourceSlot, ClickType.SWAP, player);
+                instance.handleInventoryMouseClick(id, destSlot - 9, sourceSlot, ClickType.SWAP, player);
+                return instance.handleInventoryMouseClick(id, destSlot, sourceSlot, ClickType.SWAP, player);
+            }
+            else return instance.handleInventoryMouseClick(id, destSlot, sourceSlot, ClickType.SWAP, player);
+        }
+        return null;
+    }
+
+
+    @Redirect(method = "switchBack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/item/ItemStack;", ordinal = 1))
+    private static ItemStack onSwitchBack(MultiPlayerGameMode instance, int id, int sourceSlot, int destSlot, ClickType clickType, Player player) {
+        if (sourceSlot >= player.inventory.getContainerSize()) {
+                Networking.CHANNEL.sendToServer(new CMoveCurioPacket(sourceSlot - player.inventory.getContainerSize(), destSlot));
+        } else return instance.handleInventoryMouseClick(id, destSlot, sourceSlot, ClickType.SWAP, player);
+        return null;
     }
 }
