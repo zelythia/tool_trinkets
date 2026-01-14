@@ -1,1 +1,0 @@
- - Remove dynamic slot size as it causes to many bugs and crashes

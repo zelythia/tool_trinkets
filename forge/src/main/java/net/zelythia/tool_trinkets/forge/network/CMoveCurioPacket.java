@@ -45,7 +45,7 @@ public class CMoveCurioPacket {
             if (pkt.curioSlot < 0 || pkt.invSlot < 0) return;
             if (pkt.invSlot >= player.containerMenu.slots.size()) return;
 
-            CuriosApi.getCuriosInventory(player).ifPresent(curiosItemHandler -> {
+            CuriosApi.getCuriosHelper().getCuriosHandler(player).ifPresent(curiosItemHandler -> {
                 int curioSlot = pkt.curioSlot;
 
                 ICurioStacksHandler stacksHandler = curiosItemHandler.getStacksHandler("tools").orElseGet(null);

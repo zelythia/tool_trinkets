@@ -1,7 +1,0 @@
-{
-  "order": 1000,
-  "size": 9,
-  "icon": "tool_trinkets:slot/tool",
-  "add_cosmetic": false,
-  "render_toggle": false
-}
