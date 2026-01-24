@@ -4,9 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -29,8 +27,6 @@ public final class ToolTrinketsForge {
 
         FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
 
-        context.getModEventBus().addListener(this::onTextureStitch);
-
         MinecraftForge.EVENT_BUS.register(this);
 
         Networking.register();
@@ -43,9 +39,5 @@ public final class ToolTrinketsForge {
         });
     }
 
-    @SubscribeEvent
-    public void onTextureStitch(TextureStitchEvent.Pre event) {
-        event.addSprite(new ResourceLocation(ToolTrinkets.MOD_ID, "slot/tool"));
-    }
 
 }

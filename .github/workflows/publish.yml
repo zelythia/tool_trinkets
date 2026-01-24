@@ -3,7 +3,7 @@ name: Publish on GitHub, CurseForge & Modrinth
 on: [ workflow_dispatch ]
 
 env:
-  MINECRAFT_VERSION: 1.18.2
+  MINECRAFT_VERSION: 1.19.4
   VERSION: 1.0.0
   FORGE: true
   FABRIC: true
@@ -84,6 +84,7 @@ jobs:
             quilt
 
           dependencies: |
+            fabric(required){modrinth:P7dR8mSH}{curseforge:306612}#(ignore:github)
             trinkets(required){modrinth:5aaWibi9}{curseforge:341284}#(ignore:github)
             autotools(optional){modrinth:zgVJyCgK}{curseforge:522205}#(ignore:github)
 

@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'tool_trinkets_1.18.2'
+rootProject.name = 'tool_trinkets_1.19.4'
 
 include 'common'
 include 'fabric'
