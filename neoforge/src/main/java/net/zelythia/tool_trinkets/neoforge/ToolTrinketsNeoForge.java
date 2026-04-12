@@ -3,7 +3,7 @@ package net.zelythia.tool_trinkets.neoforge;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -26,8 +26,8 @@ import top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios;
 
 @Mod(ToolTrinkets.MOD_ID)
 public class ToolTrinketsNeoForge {
-    public static final ResourceLocation MOVE_TRINKET_PACKET = ResourceLocation.fromNamespaceAndPath(ToolTrinkets.MOD_ID, "move_trinket");
-    public static final TagKey<Item> TOOLS = ItemTags.create(ResourceLocation.fromNamespaceAndPath("curios", "tools"));
+    public static final Identifier MOVE_TRINKET_PACKET = Identifier.fromNamespaceAndPath(ToolTrinkets.MOD_ID, "move_trinket");
+    public static final TagKey<Item> TOOLS = ItemTags.create(Identifier.fromNamespaceAndPath("curios", "tools"));
     private static final Logger LOGGER = LoggerFactory.getLogger(ToolTrinketsNeoForge.class);
 
 
