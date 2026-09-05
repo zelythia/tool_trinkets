@@ -1,5 +1,6 @@
 package net.zelythia.tool_trinkets.neoforge;
 
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -7,12 +8,15 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -34,7 +38,6 @@ public class ToolTrinketsNeoForge {
     public ToolTrinketsNeoForge(IEventBus modEventBus, ModContainer modContainer) {
         // Registering mod for game events
         modEventBus.register(this);
-
     }
 
     @SubscribeEvent
@@ -71,13 +74,30 @@ public class ToolTrinketsNeoForge {
                     player.getInventory().setItem(pkt.invSlot, fromStack);
                     stacksHandler.getStacks().setStackInSlot(curioSlot, toStack);
 
-                    // mark changes to server sends updates
+                    // mark changes so server sends updates
                     stacksHandler.update();
                     PacketDistributor.sendToPlayer(player, new SPacketSyncCurios(player.getId(), curiosItemHandler.getCurios()));
-//                    player.containerMenu.broadcastChanges();
                 });
             });
         });
+    }
+
+    public static void swapTrinket(MultiPlayerGameMode instance, int id, int sourceSlot, int destSlot, Player player) {
+        if (sourceSlot >= player.getInventory().getContainerSize()) {
+            int curioSlot = sourceSlot - player.getInventory().getContainerSize();
+            CuriosApi.getCuriosInventory(player).ifPresent(curiosItemHandler -> {
+                curiosItemHandler.getStacksHandler("tools").ifPresent(stacksHandler -> {
+                    if (curioSlot >= 0 && curioSlot < stacksHandler.getStacks().getSlots()) {
+                        ItemStack fromStack = stacksHandler.getStacks().getStackInSlot(curioSlot).copy();
+                        ItemStack toStack = player.getInventory().getItem(destSlot).copy();
+
+                        player.getInventory().setItem(destSlot, fromStack);
+                        stacksHandler.getStacks().setStackInSlot(curioSlot, toStack);
+                    }
+                });
+            });
+            ClientPacketDistributor.sendToServer(new ToolTrinketsNeoForge.MoveTrinketPayload(curioSlot, destSlot));
+        } else instance.handleContainerInput(id, sourceSlot, destSlot, ContainerInput.SWAP, player);
     }
 
     public record MoveTrinketPayload(int curioSlot, int invSlot) implements CustomPacketPayload {

@@ -12,7 +12,7 @@ authors = "lukas/zelythia"
 description = '''
 This mod adds trinket slots for minecraft tools that also work with AutoTools!
 '''
-logoFile = "assets/tool_trinkets/icon.png"
+iconFile = "assets/tool_trinkets/icon.png"
 
 [[dependencies.tool_trinkets]]
 modId = "neoforge"
@@ -24,7 +24,7 @@ side = "CLIENT"
 [[dependencies.tool_trinkets]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[26.1,)"
+versionRange = "[26.2,)"
 ordering = "NONE"
 side = "BOTH"
 
