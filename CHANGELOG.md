@@ -1,0 +1,1 @@
+- Fix slot icon
