@@ -1,7 +1,7 @@
 {
   "amount" : 9,
   "order": 1000,
-  "icon" : "tool_trinkets:slot/tool",
+  "icon" : "tool_trinkets:slot/tool_bg",
   "validator_predicates": [
     "trinkets:tag"
   ],
