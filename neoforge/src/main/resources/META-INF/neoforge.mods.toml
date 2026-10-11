@@ -24,7 +24,7 @@ side = "CLIENT"
 [[dependencies.tool_trinkets]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[26.2,)"
+versionRange = "[26.3,)"
 ordering = "NONE"
 side = "BOTH"
 
